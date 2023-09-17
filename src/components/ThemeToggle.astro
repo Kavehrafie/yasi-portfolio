@@ -1,3 +1,32 @@
 ---
-$END$
+import { Icon } from 'astro-icon'
 ---
+
+<button id="toggle-theme" class="relative text-black w-7 block h-7 focus:ring-2 p-1 focus:ring-zinc-500">
+    <Icon name="ph:sun" class="w-7 absolute top-0 left-0 opacity-0 dark:opacity-100 dark:rotate-180 transition-all "/>
+    <Icon name="ph:moon" class="w-7 absolute top-0 left-0 rotate-0 dark:rotate-[-360deg] opacity-100 dark:opacity-0 transition-all"/>
+</button>
+
+<script is:inline>
+    function setTheme() {
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    }
+
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    window.addEventListener('load', () => {
+        setTheme();
+    })
+
+    document.querySelector('#toggle-theme').addEventListener('click', () => {
+      if (localStorage.theme === 'light') {
+        localStorage.theme = 'dark'
+      } else {
+        localStorage.theme = 'light'
+      }
+      setTheme()
+    })
+</script>

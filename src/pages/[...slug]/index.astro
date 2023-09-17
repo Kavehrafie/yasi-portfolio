@@ -1,0 +1,12 @@
+---
+import { getCollection } from "astro:content";
+
+const {slug} = Astro.params;
+export async function getStaticPaths() {
+    const pages = await getCollection("pages", ({ data }) => data?.published)
+
+    return pages.map(page => ({params: {slug: page.slug}}))
+}
+---
+
+{slug}

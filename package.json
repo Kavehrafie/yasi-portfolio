@@ -11,6 +11,14 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^1.1.0",
-    "astro": "^3.0.13"
+    "@astrojs/tailwind": "^5.0.0",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "astro": "^3.0.13",
+    "gsap": "^3.12.2",
+    "tailwindcss": "^3.0.24"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10",
+    "astro-icon": "^0.8.1"
   }
 }

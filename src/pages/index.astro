@@ -1,18 +1,96 @@
 ---
-import Test from "../content/test.mdx";
-
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ThemeToggle from "@/components/ThemeToggle.astro";
+import MainNav from "../components/MainNav.astro";
+import Profile from "../components/Profile.astro";
+import {Icon} from 'astro-icon'
+import {getEntry} from "astro:content";
+const {data} = await getEntry('setting', 'index')
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	<Test/>
-	</body>
-</html>
+<BaseLayout title="Home Page" bodyClasses="h-screen overflow-y-hidden">
+    <div>
+
+        <MainNav/>
+
+        <section class="h-[calc(100vh-51px)] relative w-screen grid grid-cols-3 lg:grid-cols-4 px-4"
+                 id="welcome-prompt">
+            <p class="prose text-blue-600 text-center col-span-3 md:text-left md:col-span-2 lg:col-span-1 lg:col-start-2 place-self-center max-w-xs"
+               set:html={data.heroDesc}>
+            </p>
+            <Profile wrapperClasses="fill-current text-blue-600 w-24 lg:w-60 place-self-end mt-auto col-start-3 "/>
+            <a href="#project-container"
+               class="snap-scroll-action absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center"
+            >
+                <span class="text-xs">scroll down</span>
+                <Icon name="tabler:chevron-down" class="w-8 text-blue-600"/>
+            </a>
+        </section>
+        <section class="h-screen w-screen snap-top bg-blue-600" id="blue-screen">
+        </section>
+        <section class="h-screen w-screen snap-top" id="project-container">
+            <div class="container mx-auto px-4">
+                <h2>Recent work</h2>
+            </div>
+        </section>
+    </div>
+
+
+    <script>
+        import {gsap} from "gsap";
+        import {ScrollTrigger} from "gsap/ScrollTrigger";
+        import ScrollToPlugin from "gsap/ScrollToPlugin";
+
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+        var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+        function homepageScrollAnimation() {
+            let tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "body",
+                    pin: true,
+                    start: "top top",
+                    end: viewportHeight,
+                    scrub: 1,
+                    endTrigger: '#project-container',
+
+                }
+            })
+
+            tl.to('#blue-screen', {
+                y: -viewportHeight
+            }).to('#welcome-prompt', {
+                opacity: 0
+            }).to('#blue-screen', {
+                opacity: 0
+            }).set(['#welcome-prompt', '#blue-screen'], {
+                height: 0
+            }).fromTo('#project-container', {
+                opacity: 0
+            }, {opacity: 1, duration: 1}, '<')
+
+        }
+
+        function registerScrollToLinks() {
+            document.querySelectorAll("a.snap-scroll-action").forEach((item, index) => {
+                item.addEventListener("click", (event) => {
+                    // Prevent the default action
+                    event.preventDefault();
+                    let target = event.currentTarget;
+                    let hash = target.hash;
+
+                    console.log(target, hash)
+                    gsap.to(window, {
+                        duration: 1,
+                        scrollTo: '#project-container',
+                        ease: "Power1.easeInOut"
+                    });
+                });
+            });
+        }
+
+        homepageScrollAnimation();
+        registerScrollToLinks();
+    </script>
+</BaseLayout>

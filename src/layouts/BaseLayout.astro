@@ -1,3 +1,18 @@
 ---
-$END$
+import BaseHead from "@/components/BaseHead.astro";
+const {title, description = "Yasaman Moussavi's webpage", image = "/placeholder-1.jpg"} = Astro.props;
+
+import {getEntry} from "astro:content"
+
+const setting = await getEntry('setting', 'index')
+const {bodyClasses = ""} = Astro.props;
 ---
+<!doctype html>
+<html lang="en">
+<head>
+    <BaseHead title={title} description={description} image={image}/>
+</head>
+<body class:list={bodyClasses}>
+    <slot/>
+</body>
+</html>
