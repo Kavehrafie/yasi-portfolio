@@ -1,96 +1,157 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import ThemeToggle from "@/components/ThemeToggle.astro";
 import MainNav from "../components/MainNav.astro";
 import Profile from "../components/Profile.astro";
-import {Icon} from 'astro-icon'
-import {getEntry} from "astro:content";
-const {data} = await getEntry('setting', 'index')
+import { fade } from "astro:transitions";
+import { Icon } from "astro-icon";
+import { getEntry, getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import { Debug } from "astro:components";
+import CldImage from "../components/CldImage.astro";
+import ScrollEffects from "../components/ScrollEffects.astro";
+const { data } = await getEntry("setting", "index");
+const works = await getCollection("works");
+const recentWorks = works
+  .sort((a, b) => parseInt(b.data.year) - parseInt(a.data.year))
+  .slice(0, 3);
 ---
 
-<BaseLayout title="Home Page" bodyClasses="h-screen overflow-y-hidden">
-    <div>
+<BaseLayout title="Home Page" bodyClasses="overflow-x-hidden">
+  <main>
+    <section
+      class="panel relative grid h-screen w-screen grid-cols-3 px-4 lg:grid-cols-4"
+      id="welcome-prompt"
+    >
+      <p
+        class="prose col-span-3 max-w-xs place-self-center text-center text-blue-600 md:col-span-2 md:text-left lg:col-span-1 lg:col-start-2"
+        set:html={data.heroDesc}
+      />
+      <Profile
+        wrapperClasses="lg:w-60 fill-current text-blue-600 w-24 place-self-end mt-auto col-start-3 "
+      />
+      <a
+        href="#project-container"
+        class="snap-scroll-action absolute bottom-[5em] left-1/2 flex -translate-x-1/2 flex-col items-center justify-center"
+        x-on:click="(event,ease = 'Power1.easeInOut') => {
+              event.preventDefault();
+              let target = event.currentTarget;
+              let hash = target.hash;
 
-        <MainNav/>
-
-        <section class="h-[calc(100vh-51px)] relative w-screen grid grid-cols-3 lg:grid-cols-4 px-4"
-                 id="welcome-prompt">
-            <p class="prose text-blue-600 text-center col-span-3 md:text-left md:col-span-2 lg:col-span-1 lg:col-start-2 place-self-center max-w-xs"
-               set:html={data.heroDesc}>
-            </p>
-            <Profile wrapperClasses="fill-current text-blue-600 w-24 lg:w-60 place-self-end mt-auto col-start-3 "/>
-            <a href="#project-container"
-               class="snap-scroll-action absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col justify-center items-center"
-            >
-                <span class="text-xs">scroll down</span>
-                <Icon name="tabler:chevron-down" class="w-8 text-blue-600"/>
-            </a>
-        </section>
-        <section class="h-screen w-screen snap-top bg-blue-600" id="blue-screen">
-        </section>
-        <section class="h-screen w-screen snap-top" id="project-container">
-            <div class="container mx-auto px-4">
-                <h2>Recent work</h2>
-            </div>
-        </section>
-    </div>
-
-
-    <script>
-        import {gsap} from "gsap";
-        import {ScrollTrigger} from "gsap/ScrollTrigger";
-        import ScrollToPlugin from "gsap/ScrollToPlugin";
-
-        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-
-        var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-
-        function homepageScrollAnimation() {
-            let tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: "body",
-                    pin: true,
-                    start: "top top",
-                    end: viewportHeight,
-                    scrub: 1,
-                    endTrigger: '#project-container',
-
-                }
-            })
-
-            tl.to('#blue-screen', {
-                y: -viewportHeight
-            }).to('#welcome-prompt', {
-                opacity: 0
-            }).to('#blue-screen', {
-                opacity: 0
-            }).set(['#welcome-prompt', '#blue-screen'], {
-                height: 0
-            }).fromTo('#project-container', {
-                opacity: 0
-            }, {opacity: 1, duration: 1}, '<')
-
-        }
-
-        function registerScrollToLinks() {
-            document.querySelectorAll("a.snap-scroll-action").forEach((item, index) => {
-                item.addEventListener("click", (event) => {
-                    // Prevent the default action
-                    event.preventDefault();
-                    let target = event.currentTarget;
-                    let hash = target.hash;
-
-                    console.log(target, hash)
-                    gsap.to(window, {
-                        duration: 1,
-                        scrollTo: '#project-container',
-                        ease: "Power1.easeInOut"
-                    });
+              gsap.to(window, {
+                duration: 1,
+                scrollTo: hash,
+                ease: ease,
                 });
-            });
-        }
+        }"
+      >
+        <span class="text-xs">scroll down</span>
+        <Icon name="tabler:chevron-down" class="w-8 text-blue-600" />
+      </a>
+    </section>
 
-        homepageScrollAnimation();
-        registerScrollToLinks();
-    </script>
+    <section
+      class="panel h-screen w-screen bg-blue-600 pt-20 md:pt-32"
+      id="project-container"
+    >
+      <div class="container mx-auto px-2">
+        <h2 class="py-2 font-h text-2xl">Recent works</h2>
+        <ul class="flex flex-wrap justify-between gap-4">
+          {
+            recentWorks.map((work) => (
+              <li class="scale-90 overflow-hidden rounded-md opacity-0">
+                <a href={`/works/${work.slug}`}>
+                  <div
+                    id={`featured-${work.slug}`}
+                    class="h-[300px] w-[300px] overflow-hidden rounded-md"
+                  >
+                    <CldImage
+                      transition:name={`featured-${work.slug}`}
+                      id={work.data.featuredCloudinaryId}
+                      alt={work.data.title}
+                      width={600}
+                      height={400}
+                      class="h-[300px] w-[300px] object-cover"
+                      mode="fill"
+                    />
+                  </div>
+                  <h1
+                    class="hidden opacity-0"
+                    transition:name={`title-${work.slug}`}
+                  >
+                    {work.data.title}
+                  </h1>
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a
+              href=""
+              class="flex border border-black px-4 py-2 hover:bg-white/5"
+            >
+              Discover
+              <Icon name="tabler:chevron-right" class="w-6" />
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+    import ScrollToPlugin from "gsap/ScrollToPlugin";
+
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+    window.gsap = gsap    // register gsap globally on page
+    function scrollSectionsAnimations() {
+      let panels = gsap.utils.toArray(".panel");
+      // we'll create a ScrollTrigger for each panel just to track when each panel's top hits the top of the viewport (we only need this for snapping)
+      let tops = panels.map((panel) =>
+        ScrollTrigger.create({ trigger: panel, start: "top top" }),
+      );
+
+      panels.forEach((panel, i) => {
+        ScrollTrigger.create({
+          trigger: panel,
+          start: () =>
+            panel.offsetHeight < window.innerHeight
+              ? "top top"
+              : "bottom bottom", // if it's shorter than the viewport, we prefer to pin it at the top
+          pin: true,
+          pinSpacing: false,
+        });
+      });
+
+      ScrollTrigger.create({
+        snap: {
+          snapTo: (progress, self) => {
+            let panelStarts = tops.map((st) => st.start), // an Array of all the starting scroll positions. We do this on each scroll to make sure it's totally responsive. Starting positions may change when the user resizes the viewport
+              snapScroll = gsap.utils.snap(panelStarts, self.scroll()); // find the closest one
+            return gsap.utils.normalize(
+              0,
+              ScrollTrigger.maxScroll(window),
+              snapScroll,
+            ); // snapping requires a progress value, so convert the scroll position into a normalized progress value between 0 and 1
+          },
+          duration: 0.5,
+        },
+      });
+
+      gsap.to("#project-container .container li", {
+        opacity: 1,
+        scale: 1,
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: "#project-container", // make .panel2 the trigger
+          start: "50% bottom", // 10% of .panel2 enters the bottom of the viewport
+          // Whatever other ScrollTrigger vars you need here
+        },
+      });
+    }
+
+    scrollSectionsAnimations();
+  </script>
 </BaseLayout>

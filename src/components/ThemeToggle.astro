@@ -1,32 +1,37 @@
 ---
-import { Icon } from 'astro-icon'
+import { Icon } from "astro-icon";
 ---
 
-<button id="toggle-theme" class="relative text-black w-7 block h-7 focus:ring-2 p-1 focus:ring-zinc-500">
-    <Icon name="ph:sun" class="w-7 absolute top-0 left-0 opacity-0 dark:opacity-100 dark:rotate-180 transition-all "/>
-    <Icon name="ph:moon" class="w-7 absolute top-0 left-0 rotate-0 dark:rotate-[-360deg] opacity-100 dark:opacity-0 transition-all"/>
+<button
+  x-on:click="darkMode = (darkMode == 'dark') ? 'light' : 'dark'"
+  id="toggle-theme"
+  class="relative block h-7 w-7 p-1 text-black focus:ring-2 focus:ring-zinc-500"
+>
+  <Icon
+    name="ph:sun"
+    class="absolute left-0 top-0 w-7 opacity-0 transition-all dark:rotate-180 dark:opacity-100"
+  />
+  <Icon
+    name="ph:moon"
+    class="absolute left-0 top-0 w-7 rotate-0 opacity-100 transition-all dark:rotate-[-360deg] dark:opacity-0"
+  />
 </button>
 
 <script is:inline>
-    function setTheme() {
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
+  function setTheme() {
+    if (localStorage.getItem("darkMode") === "dark") {
+      document.querySelector("html").dataset.theme = "dark";
     }
+    if (localStorage.getItem("darkMode") === "light") {
+      document.querySelector("html").dataset.theme = "light";
+    }
+    if (!localStorage.getItem("darkMode")) {
+      let theme = window.matchMedia("(prefers-color-scheme: dark)")
+        ? "dark"
+        : "light";
+      localStorage.setItem("darkMode", theme);
+    }
+  }
 
-    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-    window.addEventListener('load', () => {
-        setTheme();
-    })
-
-    document.querySelector('#toggle-theme').addEventListener('click', () => {
-      if (localStorage.theme === 'light') {
-        localStorage.theme = 'dark'
-      } else {
-        localStorage.theme = 'light'
-      }
-      setTheme()
-    })
+  setTheme();
 </script>

@@ -1,0 +1,67 @@
+---
+import { getCollection } from "astro:content";
+import {Debug} from "astro:components";
+
+import CldImage from "@/components/CldImage.astro";
+import { fade, slide } from "astro:transitions";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+  import { getEntry } from 'astro:content';
+
+const { featuredId, title, slug, year, gallery } = Astro.props;
+  const entry = await getEntry('works', slug);
+  const { Content } = await entry.render();
+
+export async function getStaticPaths() {
+  const works = await getCollection("works");
+
+
+  return works.map((work) => ({
+    params: { slug: work.slug },
+    props: {
+      featuredId: work.data.featuredCloudinaryId,
+      title: work.data.title,
+      slug: work.slug,
+      year: work.data.year,
+      gallery: work.data?.gallery ?? []
+    },
+  }));
+}
+---
+
+<BaseLayout title={title}>
+  <div class="container mx-auto px-4">
+    <section class="panel h-[100vh-52px] bg-white items-center justify-between py-10 md:flex">
+      <div
+        class="w-[600px] h-[400px] overflow-hidden rounded-md"
+      >
+        <CldImage
+        transition:name={`featured-${slug}`}
+        transition:animate={fade({ duration: "0.5s" })}
+          id={featuredId}
+          width={600}
+          height={400}
+          alt={title && "default title"}
+          mode="fill"
+        />
+      </div>
+      <h1 transition:name={`title-${slug}`} transition:animate={fade({duration: "0.35s"})} class="flex justify-center text-5xl font-bold">{title} - {year}</h1>
+    </section>
+    <section class="panel h-screen bg-white">
+
+    <article class="prose">
+      <Content  />
+    </article>
+    </section>
+    <section class="panel h-screen bg-white grid gap-2 grid-cols-4 justify-items-end">
+      {gallery?.map(image => <div>
+        <CldImage
+          id={image.src}
+          width={400}
+          height={Math.round(image.height * 400 / image.width)}
+          alt={image.alt && "default title"}
+          mode="fill"
+      /></div>)}
+    </section>
+
+  </div>
+</BaseLayout>

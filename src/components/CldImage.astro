@@ -1,0 +1,31 @@
+---
+import {Image} from "astro:assets";
+import {Cloudinary} from '@cloudinary/url-gen';
+import {Resize} from '@cloudinary/url-gen/actions/resize';
+interface Props {
+    src: string;
+    width: string;
+    height: string;
+    alt: string;
+    mode?: string;
+}
+
+const {id, mode = 'fit', ...props} = Astro.props
+const cld = new Cloudinary({
+    cloud: {
+        cloudName: import.meta.env.VITE_CLOUDINARY_NAME
+    }
+});
+
+
+const resizeMethods = {
+    fit: Resize.fit(),
+    scale: Resize.scale(),
+    crop: Resize.crop(),
+    fill: Resize.fill()
+}
+
+const imageSource = cld.image(id).format('auto').delivery('q_auto').resize(resizeMethods[mode].width(props.width).height(props.height))
+---
+
+<Image {...props} src={imageSource.toURL()}/>
