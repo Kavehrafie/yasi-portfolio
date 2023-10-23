@@ -1,0 +1,40 @@
+---
+
+---
+
+<script>
+  import Alpine from "alpinejs";
+  import collapse from '@alpinejs/collapse'
+
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import ScrollToPlugin from "gsap/ScrollToPlugin";
+
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+  window.gsap = gsap    // register gsap globally on page
+  window.scrollTrigger = ScrollTrigger
+
+  Alpine.plugin(collapse)
+  Alpine.store('theme', {
+    init() {
+      this.isDark = (() => {
+        if(typeof localStorage !== undefined && localStorage.getItem('darkMode')) {
+          return localStorage.getItem('darkMode') === 'dark'
+        }
+
+        return window.matchMedia('(prefers-color-scheme: dark').matches;
+
+      })()
+    },
+    isDark: false,
+
+    toggle() {
+      this.isDark = !this.isDark
+      localStorage.setItem('darkMode', this.isDark ? 'dark' : 'light')
+    },
+  })
+
+  window.Alpine = Alpine
+  Alpine.start()
+</script>

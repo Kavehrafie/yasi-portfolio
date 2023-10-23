@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root,
+    html[data-theme="light"] {
+        --background: 0 0% 100%;
+        --foreground: 222.2 47.4% 11.2%;
+
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 47.4% 11.2%;
+
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 47.4% 11.2%;
+
+        --primary: 222.2 47.4% 11.2%;
+        --primary-foreground: 210 40% 98%;
+
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+
+    }
+    html[data-theme="dark"] {
+        --background: 224 71% 4%;
+        --foreground: 213 31% 91%;
+
+        --muted: 223 47% 11%;
+        --muted-foreground: 215.4 16.3% 56.9%;
+
+        --accent: 216 34% 17%;
+        --accent-foreground: 210 40% 98%;
+
+        --popover: 224 71% 4%;
+        --popover-foreground: 215 20.2% 65.1%;
+
+        --border: 216 34% 17%;
+        --input: 216 34% 17%;
+
+        --card: 224 71% 4%;
+        --card-foreground: 213 31% 91%;
+
+        --primary: 210 40% 98%;
+        --primary-foreground: 222.2 47.4% 1.2%;
+
+        --secondary: 222.2 47.4% 11.2%;
+        --secondary-foreground: 210 40% 98%;
+    }
+
+    img {
+        content-visibility: auto;
+    }
+
+    dialog {
+        @apply fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        &::backdrop {
+            @apply fixed w-screen h-screen backdrop-blur-sm bg-background/25;
+        }
+    }
+}
+
+@layer components {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+    .focus-outline {
+        @apply outline-2 outline-offset-1 outline-skin-fill focus-visible:no-underline focus-visible:outline-dashed;
+    }
+    .page {
+        @apply mx-auto prose prose-headings:font-heading prose-lg dark:prose-invert prose-img:max-w-3xl md:max-w-2xl;
+    }
+}
+
+@layer utilities {
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+
+@keyframes slide-in {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scale-out {
+    0% {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+    100% {
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+}
+
+@keyframes scale-in {
+    0% {
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+    100% {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes fade-out {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes grid-morph {
+    from {
+        grid-template-columns: 30% repeat(2, 1fr);
+    }
+    to {
+        grid-template-columns: 50% repeat(2, 1fr);
+    }
+}
+
+@keyframes grid-morph-2 {
+    to {
+        grid-template-columns: 30% repeat(2, 1fr);
+    }
+    from {
+        grid-template-columns: 50% repeat(2, 1fr);
+    }
+}
+
+@keyframes grow-in {
+    to {
+        width: 33%;
+    }
+    from {
+        width: 50%;
+    }
+}
+
+@keyframes shrink-out {
+    from {
+        width: 33%;
+    }
+    to {
+        width: 50%;
+    }
+}

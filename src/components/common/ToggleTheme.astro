@@ -1,0 +1,16 @@
+---
+import { Icon } from 'astro-icon'
+---
+
+<button
+  type="button"
+  x-on:click="$store.theme.toggle()"
+  class="relative text-foreground sticky top-0 block h-7 w-7 rounded-full bg-background p-1 text-black focus:ring-2 focus:ring-zinc-500"
+>
+  <Icon name="ph:sun" class="dark:rotate-180 dark:opacity-100 absolute left-0 top-0 w-7 opacity-0 transition-all" />
+  <Icon
+    name="ph:moon"
+    class="dark:rotate-[-360deg] dark:opacity-0 absolute left-0 top-0 w-7 rotate-0 opacity-100 transition-all"
+  />
+  <span class="sr-only">toggle theme</span>
+</button>

@@ -1,0 +1,45 @@
+---
+import { merge } from 'lodash'
+import { AstroSeo } from '@astrolib/seo'
+import { METADATA } from '@/utils/config'
+import { getCanonical } from '@/utils/permalinks'
+import { SITE } from '@/utils/config'
+import {adaptOpenGraphImages} from "../../utils/images";
+
+const {
+  title,
+  ignoreTitleTemplate = false,
+  description,
+  canonical = String(getCanonical(String(Astro.url.pathname))),
+  openGraph = {},
+} = Astro.props
+const seoProps = merge(
+  {
+    title: '',
+    titleTemplate: '%s',
+    description: undefined,
+    canonical: canonical,
+    openGraph: {
+      url: canonical,
+      site_name: SITE?.name,
+      images: [],
+      locale: 'en',
+      type: 'website',
+    },
+  },
+  {
+    title: METADATA?.title?.default,
+    titleTemplate: METADATA?.title?.template,
+    description: METADATA?.description,
+    openGraph: METADATA?.openGraph,
+  },
+  {
+    title: title,
+    titleTemplate: ignoreTitleTemplate ? '%s' : undefined,
+    canonical: canonical,
+    description: description,
+    openGraph: { url: canonical, ...openGraph },
+  }
+)
+---
+<AstroSeo {...{...seoProps, openGraph: await adaptOpenGraphImages(seoProps?.openGraph, Astro.site)}} />

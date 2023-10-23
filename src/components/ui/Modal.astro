@@ -1,0 +1,16 @@
+---
+
+const {id} = Astro.props;
+---
+
+<dialog id={id}>
+    <button class="grid grid-cols-1 grid-rows-1 w-8 h-8 place-items-center rounded overflow-hidden"
+        onclick={`window.${id}.close(); document.querySelector('body').classList.toggle('overflow-y-hidden')`}
+    >
+        <span class="w-16 h-0.5 bg-primary rotate-[45deg] col-start-1 row-start-1"></span>
+        <span class="w-16 h-0.5 bg-primary rotate-[-45deg] col-start-1 row-start-1"></span>
+    </button>
+    <div class="popover">
+        <slot />
+    </div>
+</dialog>

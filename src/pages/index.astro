@@ -1,157 +1,200 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import MainNav from "../components/MainNav.astro";
-import Profile from "../components/Profile.astro";
-import { fade } from "astro:transitions";
-import { Icon } from "astro-icon";
-import { getEntry, getCollection } from "astro:content";
-import { Image } from "astro:assets";
-import { Debug } from "astro:components";
-import CldImage from "../components/CldImage.astro";
-import ScrollEffects from "../components/ScrollEffects.astro";
-const { data } = await getEntry("setting", "index");
-const works = await getCollection("works");
-const recentWorks = works
-  .sort((a, b) => parseInt(b.data.year) - parseInt(a.data.year))
-  .slice(0, 3);
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import MainNav from '../components/MainNav.astro'
+import Profile from '../components/Profile.astro'
+import { fade } from 'astro:transitions'
+import { Icon } from 'astro-icon'
+import { getEntry, getCollection } from 'astro:content'
+import { Image } from 'astro:assets'
+import { Debug } from 'astro:components'
+import CldImage from '../components/CldImage.astro'
+import ScrollEffects from '../components/ScrollEffects.astro'
+import Layout from '../layouts/Layout.astro'
+import { SITE } from '../utils/config'
+import { slideIn, gridMorphIn } from '@/utils/animations'
+import {growIn} from "../utils/animations";
+const { data } = await getEntry('setting', 'index')
+const works = await getCollection('works')
+const recentWorks = works.sort((a, b) => parseInt(b.data.year) - parseInt(a.data.year)).slice(0, 3)
 ---
 
-<BaseLayout title="Home Page" bodyClasses="overflow-x-hidden">
+<Layout>
   <main>
-    <section
-      class="panel relative grid h-screen w-screen grid-cols-3 px-4 lg:grid-cols-4"
-      id="welcome-prompt"
-    >
-      <p
-        class="prose col-span-3 max-w-xs place-self-center text-center text-blue-600 md:col-span-2 md:text-left lg:col-span-1 lg:col-start-2"
-        set:html={data.heroDesc}
-      />
-      <Profile
-        wrapperClasses="lg:w-60 fill-current text-blue-600 w-24 place-self-end mt-auto col-start-3 "
-      />
-      <a
-        href="#project-container"
-        class="snap-scroll-action absolute bottom-[5em] left-1/2 flex -translate-x-1/2 flex-col items-center justify-center"
-        x-on:click="(event,ease = 'Power1.easeInOut') => {
-              event.preventDefault();
-              let target = event.currentTarget;
-              let hash = target.hash;
+    <section class="container mx-auto">
+      <h1 class="font-heading text-3xl py-6">Recent works</h1>
+      <div class="flex flex-wrap justify-between mt-6 gap-x-2">
+        {
+          recentWorks.map((work) => (
 
-              gsap.to(window, {
-                duration: 1,
-                scrollTo: hash,
-                ease: ease,
-                });
-        }"
-      >
-        <span class="text-xs">scroll down</span>
-        <Icon name="tabler:chevron-down" class="w-8 text-blue-600" />
-      </a>
-    </section>
+                <div id={`featured-${work.slug}`} class="w-[calc(33%-10px)] overflow-hidden rounded-md"
+                     transition:name={`featured-${work.slug}`} transition:animate={growIn}
+                >
+                  <CldImage
+                          transition:name={`image-${work.slug}`}
+                          transition:animate="none"
+                    id={work.data.featuredCloudinaryId}
+                    alt={work.data.title}
+                    width={600}
+                    height={400}
+                    class="h-[300px] object-cover"
+                    mode="fill"
+                  />
 
-    <section
-      class="panel h-screen w-screen bg-blue-600 pt-20 md:pt-32"
-      id="project-container"
-    >
-      <div class="container mx-auto px-2">
-        <h2 class="py-2 font-h text-2xl">Recent works</h2>
-        <ul class="flex flex-wrap justify-between gap-4">
-          {
-            recentWorks.map((work) => (
-              <li class="scale-90 overflow-hidden rounded-md opacity-0">
-                <a href={`/works/${work.slug}`}>
-                  <div
-                    id={`featured-${work.slug}`}
-                    class="h-[300px] w-[300px] overflow-hidden rounded-md"
-                  >
-                    <CldImage
-                      transition:name={`featured-${work.slug}`}
-                      id={work.data.featuredCloudinaryId}
-                      alt={work.data.title}
-                      width={600}
-                      height={400}
-                      class="h-[300px] w-[300px] object-cover"
-                      mode="fill"
-                    />
-                  </div>
-                  <h1
-                    class="hidden opacity-0"
-                    transition:name={`title-${work.slug}`}
-                  >
-                    {work.data.title}
-                  </h1>
-                </a>
-              </li>
-            ))
-          }
-          <li>
-            <a
-              href=""
-              class="flex border border-black px-4 py-2 hover:bg-white/5"
-            >
-              Discover
-              <Icon name="tabler:chevron-right" class="w-6" />
-            </a>
-          </li>
-        </ul>
+              <a class="flex text-lg font-bold hover:text-accent-foreground px-4 py-2 justify-between" href={`/works/${work.slug}`}>
+                <h1 class="" >
+                  {work.data.title} - {work.data?.year}
+                </h1>
+                  <Icon name="tabler:arrow-right" class="w-6" />
+              </a>
+                </div>
+          ))
+        }
+        <div>
+          <a href="" class="flex border border-black px-4 py-2 hover:bg-white/5">
+            Discover
+            <Icon name="tabler:chevron-right" class="w-6" />
+          </a>
+        </div>
       </div>
     </section>
   </main>
+</Layout>
+<!--<BaseLayout title="Home Page" bodyClasses="overflow-x-hidden">-->
+<!--  <main>-->
+<!--    <section-->
+<!--      class="panel relative grid h-screen w-screen grid-cols-3 px-4 lg:grid-cols-4"-->
+<!--      id="welcome-prompt"-->
+<!--    >-->
+<!--      <p-->
+<!--        class="prose col-span-3 max-w-xs place-self-center text-center text-blue-600 md:col-span-2 md:text-left lg:col-span-1 lg:col-start-2"-->
+<!--        set:html={data.heroDesc}-->
+<!--      />-->
+<!--      <Profile-->
+<!--        wrapperClasses="lg:w-60 fill-current text-blue-600 w-24 place-self-end mt-auto col-start-3 "-->
+<!--      />-->
+<!--      <a-->
+<!--        href="#project-container"-->
+<!--        class="snap-scroll-action absolute bottom-[5em] left-1/2 flex -translate-x-1/2 flex-col items-center justify-center"-->
+<!--        x-on:click="(event,ease = 'Power1.easeInOut') => {-->
+<!--              event.preventDefault();-->
+<!--              let target = event.currentTarget;-->
+<!--              let hash = target.hash;-->
 
-  <script>
-    import { gsap } from "gsap";
-    import { ScrollTrigger } from "gsap/ScrollTrigger";
-    import ScrollToPlugin from "gsap/ScrollToPlugin";
+<!--              gsap.to(window, {-->
+<!--                duration: 1,-->
+<!--                scrollTo: hash,-->
+<!--                ease: ease,-->
+<!--                });-->
+<!--        }"-->
+<!--      >-->
+<!--        <span class="text-xs">scroll down</span>-->
+<!--        <Icon name="tabler:chevron-down" class="w-8 text-blue-600" />-->
+<!--      </a>-->
+<!--    </section>-->
 
-    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+<!--    <section-->
+<!--      class="panel h-screen w-screen bg-blue-600 pt-20 md:pt-32"-->
+<!--      id="project-container"-->
+<!--    >-->
+<!--      <div class="container mx-auto px-2">-->
+<!--        <h2 class="py-2 font-h text-2xl">Recent works</h2>-->
+<!--        <ul class="flex flex-wrap justify-between gap-4">-->
+<!--          {-->
+<!--            recentWorks.map((work) => (-->
+<!--              <li class="scale-90 overflow-hidden rounded-md opacity-0">-->
+<!--                <a href={`/works/${work.slug}`}>-->
+<!--                  <div-->
+<!--                    id={`featured-${work.slug}`}-->
+<!--                    class="h-[300px] w-[300px] overflow-hidden rounded-md"-->
+<!--                  >-->
+<!--                    <CldImage-->
+<!--                      transition:name={`featured-${work.slug}`}-->
+<!--                      id={work.data.featuredCloudinaryId}-->
+<!--                      alt={work.data.title}-->
+<!--                      width={600}-->
+<!--                      height={400}-->
+<!--                      class="h-[300px] w-[300px] object-cover"-->
+<!--                      mode="fill"-->
+<!--                    />-->
+<!--                  </div>-->
+<!--                  <h1-->
+<!--                    class="hidden opacity-0"-->
+<!--                    transition:name={`title-${work.slug}`}-->
+<!--                  >-->
+<!--                    {work.data.title}-->
+<!--                  </h1>-->
+<!--                </a>-->
+<!--              </li>-->
+<!--            ))-->
+<!--          }-->
+<!--          <li>-->
+<!--            <a-->
+<!--              href=""-->
+<!--              class="flex border border-black px-4 py-2 hover:bg-white/5"-->
+<!--            >-->
+<!--              Discover-->
+<!--              <Icon name="tabler:chevron-right" class="w-6" />-->
+<!--            </a>-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--      </div>-->
+<!--    </section>-->
+<!--  </main>-->
 
-    window.gsap = gsap    // register gsap globally on page
-    function scrollSectionsAnimations() {
-      let panels = gsap.utils.toArray(".panel");
-      // we'll create a ScrollTrigger for each panel just to track when each panel's top hits the top of the viewport (we only need this for snapping)
-      let tops = panels.map((panel) =>
-        ScrollTrigger.create({ trigger: panel, start: "top top" }),
-      );
+<!--  <script>-->
+<!--    import { gsap } from "gsap";-->
+<!--    import { ScrollTrigger } from "gsap/ScrollTrigger";-->
+<!--    import ScrollToPlugin from "gsap/ScrollToPlugin";-->
 
-      panels.forEach((panel, i) => {
-        ScrollTrigger.create({
-          trigger: panel,
-          start: () =>
-            panel.offsetHeight < window.innerHeight
-              ? "top top"
-              : "bottom bottom", // if it's shorter than the viewport, we prefer to pin it at the top
-          pin: true,
-          pinSpacing: false,
-        });
-      });
+<!--    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);-->
 
-      ScrollTrigger.create({
-        snap: {
-          snapTo: (progress, self) => {
-            let panelStarts = tops.map((st) => st.start), // an Array of all the starting scroll positions. We do this on each scroll to make sure it's totally responsive. Starting positions may change when the user resizes the viewport
-              snapScroll = gsap.utils.snap(panelStarts, self.scroll()); // find the closest one
-            return gsap.utils.normalize(
-              0,
-              ScrollTrigger.maxScroll(window),
-              snapScroll,
-            ); // snapping requires a progress value, so convert the scroll position into a normalized progress value between 0 and 1
-          },
-          duration: 0.5,
-        },
-      });
+<!--    window.gsap = gsap    // register gsap globally on page-->
+<!--    function scrollSectionsAnimations() {-->
+<!--      let panels = gsap.utils.toArray(".panel");-->
+<!--      // we'll create a ScrollTrigger for each panel just to track when each panel's top hits the top of the viewport (we only need this for snapping)-->
+<!--      let tops = panels.map((panel) =>-->
+<!--        ScrollTrigger.create({ trigger: panel, start: "top top" }),-->
+<!--      );-->
 
-      gsap.to("#project-container .container li", {
-        opacity: 1,
-        scale: 1,
-        stagger: 0.2,
-        scrollTrigger: {
-          trigger: "#project-container", // make .panel2 the trigger
-          start: "50% bottom", // 10% of .panel2 enters the bottom of the viewport
-          // Whatever other ScrollTrigger vars you need here
-        },
-      });
-    }
+<!--      panels.forEach((panel, i) => {-->
+<!--        ScrollTrigger.create({-->
+<!--          trigger: panel,-->
+<!--          start: () =>-->
+<!--            panel.offsetHeight < window.innerHeight-->
+<!--              ? "top top"-->
+<!--              : "bottom bottom", // if it's shorter than the viewport, we prefer to pin it at the top-->
+<!--          pin: true,-->
+<!--          pinSpacing: false,-->
+<!--        });-->
+<!--      });-->
 
-    scrollSectionsAnimations();
-  </script>
-</BaseLayout>
+<!--      ScrollTrigger.create({-->
+<!--        snap: {-->
+<!--          snapTo: (progress, self) => {-->
+<!--            let panelStarts = tops.map((st) => st.start), // an Array of all the starting scroll positions. We do this on each scroll to make sure it's totally responsive. Starting positions may change when the user resizes the viewport-->
+<!--              snapScroll = gsap.utils.snap(panelStarts, self.scroll()); // find the closest one-->
+<!--            return gsap.utils.normalize(-->
+<!--              0,-->
+<!--              ScrollTrigger.maxScroll(window),-->
+<!--              snapScroll,-->
+<!--            ); // snapping requires a progress value, so convert the scroll position into a normalized progress value between 0 and 1-->
+<!--          },-->
+<!--          duration: 0.5,-->
+<!--        },-->
+<!--      });-->
+
+<!--      gsap.to("#project-container .container li", {-->
+<!--        opacity: 1,-->
+<!--        scale: 1,-->
+<!--        stagger: 0.2,-->
+<!--        scrollTrigger: {-->
+<!--          trigger: "#project-container", // make .panel2 the trigger-->
+<!--          start: "50% bottom", // 10% of .panel2 enters the bottom of the viewport-->
+<!--          // Whatever other ScrollTrigger vars you need here-->
+<!--        },-->
+<!--      });-->
+<!--    }-->
+
+<!--    scrollSectionsAnimations();-->
+<!--  </script>-->
+<!--</BaseLayout>-->

@@ -6,6 +6,8 @@ import CldImage from "@/components/CldImage.astro";
 import { fade, slide } from "astro:transitions";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
   import { getEntry } from 'astro:content';
+import Layout from "../../../layouts/Layout.astro";
+import {gridMorphOut, shrinkOut} from "../../../utils/animations";
 
 const { featuredId, title, slug, year, gallery } = Astro.props;
   const entry = await getEntry('works', slug);
@@ -26,17 +28,58 @@ export async function getStaticPaths() {
     },
   }));
 }
+
 ---
 
-<BaseLayout title={title}>
-  <div class="container mx-auto px-4">
-    <section class="panel h-[100vh-52px] bg-white items-center justify-between py-10 md:flex">
-      <div
-        class="w-[600px] h-[400px] overflow-hidden rounded-md"
-      >
-        <CldImage
+<!--<BaseLayout title={title}>-->
+<!--  <div class="container mx-auto px-4">-->
+<!--    <section class="panel h-[100vh-52px] bg-white items-center justify-between py-10 md:flex">-->
+<!--      <div-->
+<!--        class="w-[600px] h-[400px] overflow-hidden rounded-md"-->
+<!--      >-->
+<!--        <CldImage-->
+<!--        transition:name={`featured-${slug}`}-->
+<!--        transition:animate={fade({ duration: "0.5s" })}-->
+<!--          id={featuredId}-->
+<!--          width={600}-->
+<!--          height={400}-->
+<!--          alt={title && "default title"}-->
+<!--          mode="fill"-->
+<!--        />-->
+<!--      </div>-->
+<!--      <h1 transition:name={`title-${slug}`} transition:animate={fade({duration: "0.35s"})} class="flex justify-center text-5xl font-bold">{title} - {year}</h1>-->
+<!--    </section>-->
+<!--    <section class="panel h-screen bg-white">-->
+
+<!--    <article class="prose">-->
+<!--      <Content  />-->
+<!--    </article>-->
+<!--    </section>-->
+<!--    <section class="panel h-screen bg-white grid gap-2 grid-cols-4 justify-items-end">-->
+<!--      {gallery?.map(image => <div>-->
+<!--        <CldImage-->
+<!--          id={image.src}-->
+<!--          width={400}-->
+<!--          height={Math.round(image.height * 400 / image.width)}-->
+<!--          alt={image.alt && "default title"}-->
+<!--          mode="fill"-->
+<!--      /></div>)}-->
+<!--    </section>-->
+
+<!--  </div>-->
+<!--</BaseLayout>-->
+<Layout>
+    <main class="container mx-auto">
+    <section class="panel h-[100vh-52px] bg-white items-center justify-between py-10 md:flex gap-x-4">
+      <div class="flex">
+        <div
+        class="h-[400px] overflow-hidden rounded-md"
         transition:name={`featured-${slug}`}
-        transition:animate={fade({ duration: "0.5s" })}
+        transition:animate={shrinkOut}
+        >
+        <CldImage
+                transition:name={`image-${slug}`}
+                transition:animate="none"
           id={featuredId}
           width={600}
           height={400}
@@ -44,24 +87,25 @@ export async function getStaticPaths() {
           mode="fill"
         />
       </div>
-      <h1 transition:name={`title-${slug}`} transition:animate={fade({duration: "0.35s"})} class="flex justify-center text-5xl font-bold">{title} - {year}</h1>
+        </div>
+        <div class="flex flex-col">
+            <span class="text-4xl text-right">{year}</span>
+          <h1 class="flex justify-center text-7xl font-bold font-heahing">{title}</h1>
+        </div>
     </section>
-    <section class="panel h-screen bg-white">
+      <section class="panel w-full sticky top-0 overflow-x-hidden">
+          <div class="w-1/2 prose">
+              <Content />
+          </div>
+      </section>
 
-    <article class="prose">
-      <Content  />
-    </article>
-    </section>
-    <section class="panel h-screen bg-white grid gap-2 grid-cols-4 justify-items-end">
-      {gallery?.map(image => <div>
-        <CldImage
-          id={image.src}
-          width={400}
-          height={Math.round(image.height * 400 / image.width)}
-          alt={image.alt && "default title"}
-          mode="fill"
-      /></div>)}
-    </section>
-
-  </div>
-</BaseLayout>
+        <section class="w-full flex justify-end" >
+            <div class="w-1/2">
+              <button @click="window.layout.showModal(); document.querySelector('body').classList.toggle('overflow-y-hidden')">Modal</button>
+            </div>
+        </section>
+    </main>
+    <div slot="modal-main">
+        TEST
+    </div>
+</Layout>

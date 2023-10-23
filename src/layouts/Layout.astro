@@ -1,0 +1,40 @@
+---
+import '@/assets/styles/global.pcss'
+import CommonMeta from '@/components/common/CommonMeta.astro'
+import Favicons from '@/components/Favicons.astro'
+import Metadata from '../components/common/Metadata.astro'
+import BaseScripts from '../components/scripts/BaseScripts.astro'
+import { ViewTransitions } from 'astro:transitions'
+import Header from '@/components/common/Header.astro'
+import Modal from "../components/ui/Modal.astro";
+const { metadata = {} } = Astro.props
+---
+
+<!doctype html>
+<html
+  lang="en"
+  x-cloak
+  x-data
+  x-bind:data-theme="$store.theme.isDark ? 'dark' : 'light'"
+  :class="$store.theme.isDark ? 'dark' : 'light'"
+>
+  <head>
+    <CommonMeta />
+    <Favicons />
+    <Metadata {...metadata} />
+    <!-- Font -->
+    <link href="https://api.fontshare.com/v2/css?f[]=nunito@400&f[]=bebas-neue@400&display=swap" rel="stylesheet" />
+    <ViewTransitions />
+  </head>
+
+  <body class="antialiased">
+    <Header />
+    <slot />
+
+    <BaseScripts />
+    <Modal id="layout">
+        <slot name="modal-main" />
+    </Modal>
+    <slot name="postscript" />
+  </body>
+</html>

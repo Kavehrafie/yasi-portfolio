@@ -13,7 +13,7 @@ interface Props {
 const {id, mode = 'fit', ...props} = Astro.props
 const cld = new Cloudinary({
     cloud: {
-        cloudName: import.meta.env.VITE_CLOUDINARY_NAME
+        cloudName: import.meta.env.CLOUDINARY_NAME
     }
 });
 
@@ -25,7 +25,11 @@ const resizeMethods = {
     fill: Resize.fill()
 }
 
-const imageSource = cld.image(id).format('auto').delivery('q_auto').resize(resizeMethods[mode].width(props.width).height(props.height))
+let imageSource = id
+
+if (!id.startsWith('http://') && !id.startsWith('https://')) {
+  imageSource = cld.image(id).format('auto').delivery('q_auto').resize(resizeMethods[mode].width(props.width).height(props.height))
+}
 ---
 
-<Image {...props} src={imageSource.toURL()}/>
+<Image {...{...props, src: imageSource.toURL()}} />

@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content'
+import CldImage from '../CldImage.astro'
+import { growIn } from '../../utils/animations'
+
+const { category = '' } = Astro.props
+const works = await getCollection('works', ({ data }) => (category ? data?.medium?.includes(category) : true))
+console.log(works)
+---
+
+<div class="grid auto-rows-[1fr] grid-cols-3 gap-4 my-6">
+  {
+    works.map((work) => (
+      <a
+        href={work.slug}
+        class="group hover:border-1 relative box-border flex overflow-hidden transition-all rounded-lg border-primary/25 hover:ring-4 hover:ring-primary"
+      >
+        <CldImage
+          transition:name={`image-${work.slug}`}
+          transition:animate={growIn}
+          id={work.data.featuredCloudinaryId}
+          alt={work.data.title}
+          width={300}
+          height={300}
+          class="mb-0 mt-0 w-full object-cover"
+          mode="fill"
+        />
+        <span class="absolute text-center inset-0 flex justify-center items-center transition-all text-2xl opacity-0 group-hover:opacity-100">
+          {work.data.title} - {work.data.year}
+        </span>
+      </a>
+    ))
+  }
+</div>
