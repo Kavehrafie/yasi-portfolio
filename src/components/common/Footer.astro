@@ -1,0 +1,16 @@
+---
+import {Icon} from "astro-icon";
+import {getEntry} from "astro:content"
+const settings = await getEntry('setting', 'index')
+const year = new Date().getFullYear();
+---
+<footer>
+    <div class="container mx-auto flex justify-between my-16 text-sm">
+        {settings.data.footer.copyright.replace(/%s/g, year)}
+        <p class="inline-flex text-xs items-center gap-x-2">
+            Follow me on <a href="https://www.instagram.com/yasi_moussavi/">
+            <Icon name="ph:instagram-logo" class="w-6" />
+            <span class="sr-only">instagram</span></a>
+        </p>
+    </div>
+</footer>

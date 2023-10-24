@@ -1,0 +1,6 @@
+---
+const {type='button', classes='', ...props} = Astro.props
+---
+<button type={type} class:list={["relative flex justify-center items-center px-5 py-2.5 font-medium tracking-wide text-white capitalize bg-primary rounded-md hover:bg-accent-foreground  focus:outline-none text-primary-foreground  transition duration-300 transform active:scale-95 ease-in-out", classes]}>
+  <slot />
+</button>

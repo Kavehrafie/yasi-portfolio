@@ -1,0 +1,88 @@
+---
+import Mailgun from 'mailgun.js'
+import Label from "../ui/Label.astro";
+import Input from "../ui/Input.astro";
+import Textarea from "../ui/Textarea.astro";
+import Button from "../ui/Button.astro";
+import {validateEmail} from "@/utils/utils"
+const mailgun = new Mailgun(FormData)
+const mg = mailgun.client({ username: 'api', key: 'a73823cefcefdafa1caf0189503dc960-324e0bb2-2144e875' })
+const errors = {name: '', email: '', message: ''}
+const formStatus = {
+  message: ''
+}
+if (Astro.request.method === 'POST') {
+  try {
+    const data = await Astro.request.formData()
+    const name = data.get('name')
+    const email = data.get('email')
+    const message = data.get('message')
+
+    console.log(data)
+    if (typeof name !== "string" || name.length < 1) {
+      errors.name += "Please enter a username. ";
+    }
+    if (typeof email !== "string" || !validateEmail(email)) {
+      errors.email += "Email is not valid. ";
+    }
+
+    if (typeof message !== "string" || message.length < 6) {
+      errors.message += "Password must be at least 6 characters. ";
+    }
+
+    const hasErrors = Object.values(errors).some(msg => msg)
+    if (!hasErrors) {
+      formStatus.message = 'Your message has has been sent!'
+    }
+    mg.messages
+      .create('sandboxa79810dc69fd4bd9a82d78f7df057643.mailgun.org', {
+        from: 'mailgun@sandboxa79810dc69fd4bd9a82d78f7df057643.mailgun.org',
+        to: ['kavehrafie@gmail.com'],
+        subject: `A message from ${name} (${email})`,
+        text: message,
+        html: `<p>${message}</p>`,
+      })
+      .then((msg) => console.log(msg)) // logs response data
+      .catch((err) => console.log(err)) // logs any error
+  } catch (e) {
+    console.log(e)
+  }
+}
+---
+
+<div class="rounded-lg bg-background border px-4 py-6 shadow">
+
+<form method="POST">
+  <div>
+    <Label text="name" name="name" />
+    <Input name="name" placeholder="name" required />
+    {errors.name && <p class="text-red-500 text-xs">{errors.name}</p>}
+  </div>
+  <div>
+      <Label text="email" name="email" />
+      <Input name="email" placeholder="email@example.com" required minlength="6"/>
+    {errors.email && <p class="text-red-500 text-xs">{errors.email}</p>}
+  </div>
+  <div>
+    <Label text="message" name="message" />
+    <Textarea name="message" required/>
+    {errors.message && <p class="text-red-500 text-xs">{errors.message}</p>}
+  </div>
+  <div class="mt-6">
+    <Button type="submit" classes="w-full">Send</Button>
+  </div>
+</form>
+</div>
+<script defer define:vars={{formStatus}}>
+
+  if (formStatus.message.length > 0) {
+    Toastify({
+      text: formStatus.message,
+      close: true,
+      gravity: "bottom", // `top` or `bottom`
+      position: "right", // `left`, `center` or `right`
+      className: "rounded-lg border bg-black",
+    }).showToast();
+
+  }
+</script>

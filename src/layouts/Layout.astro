@@ -7,6 +7,7 @@ import BaseScripts from '../components/scripts/BaseScripts.astro'
 import { ViewTransitions } from 'astro:transitions'
 import Header from '@/components/common/Header.astro'
 import Modal from "../components/ui/Modal.astro";
+import Footer from "../components/common/Footer.astro";
 const { metadata = {} } = Astro.props
 ---
 
@@ -15,6 +16,7 @@ const { metadata = {} } = Astro.props
   lang="en"
   x-cloak
   x-data
+  class="antialiased"
   x-bind:data-theme="$store.theme.isDark ? 'dark' : 'light'"
   :class="$store.theme.isDark ? 'dark' : 'light'"
 >
@@ -24,17 +26,22 @@ const { metadata = {} } = Astro.props
     <Metadata {...metadata} />
     <!-- Font -->
     <link href="https://api.fontshare.com/v2/css?f[]=nunito@400&f[]=bebas-neue@400&display=swap" rel="stylesheet" />
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <ViewTransitions />
   </head>
 
-  <body class="antialiased">
+  <body class="antialiased min-h-screen flex flex-col justify-between">
     <Header />
+
     <slot />
 
-    <BaseScripts />
+    <Footer/>
     <Modal id="layout">
         <slot name="modal-main" />
     </Modal>
+    <BaseScripts />
     <slot name="postscript" />
+
   </body>
 </html>

@@ -1,13 +1,14 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { defineConfig } from 'astro/config'
-import mdx from '@astrojs/mdx'
-import tailwind from '@astrojs/tailwind'
-import sitemap from '@astrojs/sitemap'
-import { SITE } from './src/utils/config.ts'
-import compress from 'astro-compress'
-
+import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
+import tailwind from '@astrojs/tailwind';
+import sitemap from '@astrojs/sitemap';
+import { SITE } from './src/utils/config.ts';
+import compress from 'astro-compress';
+import vercel from "@astrojs/vercel/serverless";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -19,13 +20,15 @@ export default defineConfig({
   vite: {
     server: {
       watch: {
-        ignored: ['**/.idea/**'],
-      },
+        ignored: ['**/.idea/**']
+      }
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, './src'),
-      },
+        '@': path.resolve(__dirname, './src')
+      }
     }
   },
-})
+  output: "server",
+  adapter: vercel()
+});

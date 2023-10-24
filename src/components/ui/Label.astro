@@ -1,0 +1,7 @@
+---
+const { classes = '', name = '', text = '' } = Astro.props
+---
+
+<label class:list={['text-foreground mb-2 block text-sans text-xs uppercase tracking-wide', classes]} for={name}>
+  {Astro.slots.has('default') ? <slot /> : text}
+</label>

@@ -5,15 +5,13 @@
 <script>
   import Alpine from "alpinejs";
   import collapse from '@alpinejs/collapse'
-
+  import { debounce } from "lodash"
   import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
   import ScrollToPlugin from "gsap/ScrollToPlugin";
 
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-
-  window.gsap = gsap    // register gsap globally on page
-  window.scrollTrigger = ScrollTrigger
+  // window.scrollTrigger = ScrollTrigger
 
   Alpine.plugin(collapse)
   Alpine.store('theme', {
@@ -35,6 +33,8 @@
     },
   })
 
+  window.debounce = debounce
+  window.gsap = gsap    // register gsap globally on page
   window.Alpine = Alpine
   Alpine.start()
 </script>

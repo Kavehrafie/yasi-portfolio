@@ -1,7 +1,7 @@
 ---
 import { getCollection, CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-
+export const prerender = true
 interface Props {
   page: CollectionEntry<'pages'>
 }

@@ -6,9 +6,9 @@
   class="grid h-8 w-8 grid-cols-1 grid-rows-3"
   @click="isOpen = !isOpen; if(isOpen) {document.querySelector('body').classList.add('overflow-hidden')} else {document.querySelector('body').classList.remove('overflow-hidden')}"
 >
-  <span :class="{'h-0.5 w-8 bg-gray-900 duration-200 col-start-1': true, 'rotate-[45deg] row-start-2':isOpen}"></span>
+  <span :class="{'h-0.5 w-8 bg-primary duration-200 col-start-1': true, 'rotate-[45deg] row-start-2':isOpen}"></span>
   <span
-    :class="{'h-0.5 w-8 bg-gray-900 duration-200 col-start-1 row-start-2': true, 'rotate-[135deg] opacity-0 ':isOpen}"
+    :class="{'h-0.5 w-8 bg-primary duration-200 col-start-1 row-start-2': true, 'rotate-[135deg] opacity-0 ':isOpen}"
   ></span>
-  <span :class="{'h-0.5 w-8 bg-gray-900 duration-200 col-start-1': true, '-rotate-[45deg] row-start-2':isOpen}"></span>
+  <span :class="{'h-0.5 w-8 bg-primary duration-200 col-start-1': true, '-rotate-[45deg] row-start-2':isOpen}"></span>
 </button>

@@ -6,3 +6,11 @@ export const trim = (str = '', ch?: string) => {
     while (end > start && str[end - 1] === ch) --end;
     return start > 0 || end < str.length ? str.substring(start, end) : str;
 };
+
+export const validateEmail = (email: string) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+};

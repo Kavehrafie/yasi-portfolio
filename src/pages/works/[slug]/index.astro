@@ -1,22 +1,23 @@
 ---
-import { getCollection } from "astro:content";
-import {Debug} from "astro:components";
+import { getCollection } from 'astro:content'
+import { Debug } from 'astro:components'
 
-import CldImage from "@/components/CldImage.astro";
-import { fade, slide } from "astro:transitions";
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-  import { getEntry } from 'astro:content';
-import Layout from "../../../layouts/Layout.astro";
-import {gridMorphOut, shrinkOut} from "../../../utils/animations";
+import CldImage from '@/components/CldImage.astro'
+import { fade, slide } from 'astro:transitions'
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import { getEntry } from 'astro:content'
+import Layout from '../../../layouts/Layout.astro'
+import { gridMorphOut, shrinkOut } from '../../../utils/animations'
+import { chunk } from 'lodash'
 
-const { featuredId, title, slug, year, gallery } = Astro.props;
-  const entry = await getEntry('works', slug);
-  const { Content } = await entry.render();
+export const prerender = true
 
+const { featuredId, title, slug, year, gallery } = Astro.props
+const entry = await getEntry('works', slug)
+const { Content } = await entry.render()
+const galleryOf2 = chunk(gallery, 2)
 export async function getStaticPaths() {
-  const works = await getCollection("works");
-
-
+  const works = await getCollection('works')
   return works.map((work) => ({
     params: { slug: work.slug },
     props: {
@@ -24,88 +25,92 @@ export async function getStaticPaths() {
       title: work.data.title,
       slug: work.slug,
       year: work.data.year,
-      gallery: work.data?.gallery ?? []
+      gallery: work.data?.gallery ?? [],
     },
-  }));
+  }))
 }
-
 ---
 
-<!--<BaseLayout title={title}>-->
-<!--  <div class="container mx-auto px-4">-->
-<!--    <section class="panel h-[100vh-52px] bg-white items-center justify-between py-10 md:flex">-->
-<!--      <div-->
-<!--        class="w-[600px] h-[400px] overflow-hidden rounded-md"-->
-<!--      >-->
-<!--        <CldImage-->
-<!--        transition:name={`featured-${slug}`}-->
-<!--        transition:animate={fade({ duration: "0.5s" })}-->
-<!--          id={featuredId}-->
-<!--          width={600}-->
-<!--          height={400}-->
-<!--          alt={title && "default title"}-->
-<!--          mode="fill"-->
-<!--        />-->
-<!--      </div>-->
-<!--      <h1 transition:name={`title-${slug}`} transition:animate={fade({duration: "0.35s"})} class="flex justify-center text-5xl font-bold">{title} - {year}</h1>-->
-<!--    </section>-->
-<!--    <section class="panel h-screen bg-white">-->
-
-<!--    <article class="prose">-->
-<!--      <Content  />-->
-<!--    </article>-->
-<!--    </section>-->
-<!--    <section class="panel h-screen bg-white grid gap-2 grid-cols-4 justify-items-end">-->
-<!--      {gallery?.map(image => <div>-->
-<!--        <CldImage-->
-<!--          id={image.src}-->
-<!--          width={400}-->
-<!--          height={Math.round(image.height * 400 / image.width)}-->
-<!--          alt={image.alt && "default title"}-->
-<!--          mode="fill"-->
-<!--      /></div>)}-->
-<!--    </section>-->
-
-<!--  </div>-->
-<!--</BaseLayout>-->
+<!--<BaseLayout title={title}>--><!--  <div class="container mx-auto px-4">--><!--    <section class="panel h-[100vh-52px] bg-white items-center justify-between py-10 md:flex">--><!--      <div--><!--        class="w-[600px] h-[400px] overflow-hidden rounded-md"--><!--      >--><!--        <CldImage--><!--        transition:name={`featured-${slug}`}--><!--        transition:animate={fade({ duration: "0.5s" })}--><!--          id={featuredId}--><!--          width={600}--><!--          height={400}--><!--          alt={title && "default title"}--><!--          mode="fill"--><!--        />--><!--      </div>--><!--      <h1 transition:name={`title-${slug}`} transition:animate={fade({duration: "0.35s"})} class="flex justify-center text-5xl font-bold">{title} - {year}</h1>--><!--    </section>--><!--    <section class="panel h-screen bg-white">--><!--    <article class="prose">--><!--      <Content  />--><!--    </article>--><!--    </section>--><!--    <section class="panel h-screen bg-white grid gap-2 grid-cols-4 justify-items-end">--><!--      {gallery?.map(image => <div>--><!--        <CldImage--><!--          id={image.src}--><!--          width={400}--><!--          height={Math.round(image.height * 400 / image.width)}--><!--          alt={image.alt && "default title"}--><!--          mode="fill"--><!--      /></div>)}--><!--    </section>--><!--  </div>--><!--</BaseLayout>-->
 <Layout>
-    <main class="container mx-auto">
-    <section class="panel h-[100vh-52px] bg-white items-center justify-between py-10 md:flex gap-x-4">
+  <main class="container mx-auto">
+    <section class="panel h-[100vh-52px] items-center justify-between gap-x-4 py-10 md:flex">
       <div class="flex">
         <div
-        class="h-[400px] overflow-hidden rounded-md"
-        transition:name={`featured-${slug}`}
-        transition:animate={shrinkOut}
+          class="h-[400px] overflow-hidden rounded-md"
+          transition:name={`featured-${slug}`}
+          transition:animate={shrinkOut}
         >
-        <CldImage
-                transition:name={`image-${slug}`}
-                transition:animate="none"
-          id={featuredId}
-          width={600}
-          height={400}
-          alt={title && "default title"}
-          mode="fill"
-        />
+          <CldImage
+            transition:name={`image-${slug}`}
+            transition:animate="none"
+            id={featuredId}
+            width={600}
+            height={400}
+            class="h-full"
+            alt={title && 'default title'}
+            mode="fill"
+          />
+        </div>
       </div>
-        </div>
-        <div class="flex flex-col">
-            <span class="text-4xl text-right">{year}</span>
-          <h1 class="flex justify-center text-7xl font-bold font-heahing">{title}</h1>
-        </div>
+      <div class="flex flex-col">
+        <span class="text-right text-4xl">{year}</span>
+        <h1 class="font-heading flex justify-center lg:text-6xl xl:text-8xl font-light">{title}</h1>
+      </div>
     </section>
-      <section class="panel w-full sticky top-0 overflow-x-hidden">
-          <div class="w-1/2 prose">
-              <Content />
-          </div>
-      </section>
+    <section class="panel sticky top-[100px] w-full overflow-x-hidden">
+      <div class="prose-headings:font-heading prose:font-sans z-5 prose relative w-1/2 pr-10 dark:prose-invert">
+        <Content />
+      </div>
+    </section>
 
-        <section class="w-full flex justify-end" >
-            <div class="w-1/2">
-              <button @click="window.layout.showModal(); document.querySelector('body').classList.toggle('overflow-y-hidden')">Modal</button>
+    <section class="flex max-h-[screen] w-full items-center justify-end" x-data="{ }">
+      <div class="z-5 relative grid w-1/2 grid-cols-2 gap-4">
+        {
+          chunk(gallery, 2).map((group) => (
+            <div class="grid gap-4">
+              {group.map((image) => (
+                <button
+                  @click={`$store.imageId = '${image.src}';  window.layout.showModal(); document.querySelector('body').classList.toggle('overflow-y-hidden')`}
+                  class="hover:ring-4 hover:ring-primary/50 focus:ring-4 focus:ring-primary rounded overflow-hidden"
+                >
+                  <CldImage
+                    class="w-full h-full object-cover"
+                    id={image.src}
+                    width={image.width}
+                    height={image.height}
+                    alt={image.alt && 'default title'}
+                    mode="crop"
+                  />
+                </button>
+              ))}
             </div>
-        </section>
-    </main>
-    <div slot="modal-main">
-        TEST
+          ))
+        }
+      </div>
+    </section>
+  </main>
+  <div slot="modal-main" x-data="{ imageId: $store.imageId }">
+    <div class="my-6">
+      {
+        gallery.map((image) => (
+          <div x-show={`$store.imageId === '${image.src}'`} class="oveflow-y-hidden grid">
+            <div
+              class=""
+              @click="window.layout.close(); document.querySelector('body').classList.toggle('overflow-y-hidden')"
+            >
+              <CldImage
+                id={image.src}
+                width={image.width}
+                height={image.height}
+                class="h-[80vh] max-w-3xl object-contain"
+                alt={image.alt && 'default title'}
+                mode="fill"
+              />
+            </div>
+          </div>
+        ))
+      }
     </div>
+  </div>
 </Layout>

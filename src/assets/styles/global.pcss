@@ -1,3 +1,4 @@
+@import "toastify-js/src/toastify.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -61,17 +62,18 @@
     }
 
     dialog {
-        @apply fixed;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        @apply fixed bg-transparent;
+
         &::backdrop {
             @apply fixed w-screen h-screen backdrop-blur-sm bg-background/25;
         }
     }
+
+
 }
 
 @layer components {
+
     * {
         @apply border-border;
     }
@@ -83,7 +85,7 @@
         @apply outline-2 outline-offset-1 outline-skin-fill focus-visible:no-underline focus-visible:outline-dashed;
     }
     .page {
-        @apply mx-auto prose prose-headings:font-heading prose-lg dark:prose-invert prose-img:max-w-3xl md:max-w-2xl;
+        @apply mx-auto prose prose-headings:font-heading prose-lg dark:prose-invert  md:max-w-2xl;
     }
 }
 
@@ -93,6 +95,9 @@
     }
 }
 
+.toastify {
+    background: black;
+}
 
 @keyframes slide-in {
     0% {

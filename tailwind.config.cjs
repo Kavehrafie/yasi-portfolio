@@ -47,5 +47,6 @@ module.exports = {
     require('@tailwindcss/container-queries'),
     require('tailwindcss-animate'),
     require('@tailwindcss/typography'),
+    require('@tailwindcss/forms')
   ],
 }
