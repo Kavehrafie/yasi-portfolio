@@ -8,14 +8,14 @@ import BaseLayout from '../../../layouts/BaseLayout.astro'
 import { getEntry } from 'astro:content'
 import Layout from '../../../layouts/Layout.astro'
 import { gridMorphOut, shrinkOut } from '../../../utils/animations'
-import {lodash} from '@/utils/config'
+import {chunk} from 'lodash'
 
 export const prerender = true
 
 const { featuredId, title, slug, year, gallery } = Astro.props
 const entry = await getEntry('works', slug)
 const { Content } = await entry.render()
-const galleryOf2 = lodash.chunk(gallery, 2)
+const galleryOf2 = chunk(gallery, 2)
 export async function getStaticPaths() {
   const works = await getCollection('works')
   return works.map((work) => ({

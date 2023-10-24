@@ -1,5 +1,5 @@
 ---
-import {lodash} from '@/utils/config';
+import {merge} from 'lodash';
 
 import { AstroSeo } from '@astrolib/seo'
 import { METADATA } from '@/utils/config'
@@ -16,7 +16,7 @@ const {
   canonical = String(getCanonical(String(Astro.url.pathname))),
   openGraph = {},
 } = Astro.props
-const seoProps = lodash.merge(
+const seoProps = merge(
   {
     title: '',
     titleTemplate: '%s',
