@@ -8,8 +8,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro'
 import { getEntry } from 'astro:content'
 import Layout from '../../../layouts/Layout.astro'
 import { gridMorphOut, shrinkOut } from '../../../utils/animations'
-import { chunk } from 'lodash'
-
+import  pkg from 'lodash'
+const {chunk} = pkg
 export const prerender = true
 
 const { featuredId, title, slug, year, gallery } = Astro.props
