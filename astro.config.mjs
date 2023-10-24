@@ -7,6 +7,8 @@ import sitemap from '@astrojs/sitemap';
 import { SITE } from './src/utils/config.ts';
 import compress from 'astro-compress';
 import vercel from "@astrojs/vercel/serverless";
+import commonjs from '@rollup/plugin-commonjs';
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
@@ -28,6 +30,10 @@ export default defineConfig({
         '@': path.resolve(__dirname, './src')
       }
     }
+  },
+  rollup(config) {
+    config.plugins.push(commonjs());
+    return config;
   },
   output: "server",
   adapter: vercel()
