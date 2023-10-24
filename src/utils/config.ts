@@ -1,10 +1,9 @@
 import yaml from 'js-yaml'
 import fs from 'fs'
 // @ts-ignore
-import pkg from 'lodash';
+import merge from 'lodash/merge';
 import type { MetaData } from '@/types'
 
-const { merge } = pkg;
 export interface SiteConfig {
   name: string
   site?: string
