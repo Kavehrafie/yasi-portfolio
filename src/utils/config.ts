@@ -1,9 +1,10 @@
 import yaml from 'js-yaml'
 import fs from 'fs'
 // @ts-ignore
-import merge from 'lodash/merge';
+import _ from 'lodash';
 import type { MetaData } from '@/types'
 
+export const lodash = _
 export interface SiteConfig {
   name: string
   site?: string
@@ -26,7 +27,7 @@ const getSite = () => {
     trailingSlash: 'ignore',
   }
 
-  return merge({}, _default, config?.site ?? {}) as SiteConfig
+  return _.merge({}, _default, config?.site ?? {}) as SiteConfig
 }
 
 export interface MetaDataConfig extends Omit<MetaData, 'title'> {
@@ -50,7 +51,7 @@ const getMetadata = () => {
     }
   }
 
-  return merge({}, _default, config?.metadata ?? {}) as MetaDataConfig
+  return _.merge({}, _default, config?.metadata ?? {}) as MetaDataConfig
 }
 
 // export const SITE_BASEPATH = import.meta.env.SITE_BASEURL

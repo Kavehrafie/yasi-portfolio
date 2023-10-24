@@ -5,7 +5,7 @@
 <script>
   import Alpine from "alpinejs";
   import collapse from '@alpinejs/collapse'
-  import debounce from "lodash/debounce"
+  import {lodash} from "@/utils/config"
 
   import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -34,7 +34,7 @@
     },
   })
 
-  window.debounce = debounce
+  window.debounce = lodash.debounce
   window.gsap = gsap    // register gsap globally on page
   window.Alpine = Alpine
   Alpine.start()
