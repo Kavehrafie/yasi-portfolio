@@ -1,7 +1,7 @@
 import yaml from 'js-yaml'
 import fs from 'fs'
 // @ts-ignore
-import {merge} from 'lodash';
+import {merge} from 'lodash-es';
 import type { MetaData } from '@/types'
 export const prerender = true
 
