@@ -13,6 +13,10 @@ import Layout from '../layouts/Layout.astro'
 import { SITE } from '../utils/config'
 import { slideIn, gridMorphIn } from '@/utils/animations'
 import {growIn} from "../utils/animations";
+
+export const prerender = true
+
+
 const { data } = await getEntry('setting', 'index')
 const works = await getCollection('works')
 const recentWorks = works.sort((a, b) => parseInt(b.data.year) - parseInt(a.data.year)).slice(0, 3)
