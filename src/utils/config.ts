@@ -3,6 +3,7 @@ import fs from 'fs'
 // @ts-ignore
 import {merge} from 'lodash';
 import type { MetaData } from '@/types'
+export const prerender = true
 
 export interface SiteConfig {
   name: string
